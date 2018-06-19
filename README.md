@@ -1,115 +1,94 @@
-# homebridge-mi-air-purifier
+Features
 
-This is Xiaomi Mi Air Purifier plugin for [Homebridge](https://github.com/nfarina/homebridge). This plugin will add the air purifier and **Air Quality Sensor** to your Home app. This version is working with iOS 11 to add the device as air purifier in Home app.
+    Switch on / off.
 
-![mi-air-purifier](https://cloud.githubusercontent.com/assets/73107/26249685/1d0ae78c-3cda-11e7-8b64-71e8d4323a3e.jpg)
+    Control modes:
 
-### Features
+      Idle / Off: Lift fan speed to 0% from Home app.
 
-* Switch on / off.
+      Auto: Lift fan speed between 1 - 60%.
 
-* Switch auto / manual mode.
+      Silent: Lift fan speed between 61 - 80%.
 
-* Turn parental mode on / off.
+      Favorite / High: Lift fan speed great than 80%.
 
-* Control modes:
+    Switch child lock on / off.
 
-  - `Idle / Off`: Lift fan speed to 0% from Home app.
+    Switch LED light on / off.
 
-  - `Auto`: Lift fan speed between 1 - 60%.
+    Switch buzzer sound on / off.
 
-  - `Silent`: Lift fan speed between 61 - 80%.
+    Display temperature.
 
-  - `Favorite / High`: Lift fan speed great than 80%.
+    Display humidity.
 
-    **Notes:** Alternatively, you can ask Siri to change the fan speed within the range to adjust the air purifier mode. Example:
+    Display air quality.
 
-    ```
-    Hey Siri, change the air purifier speed to 100.
-    ```
+Installation
+
+    Install required packages.
+
+    npm install -g homebridge-mi-air-purifier miio
 
     ​
 
-* Display temperature.
+    Make sure your Homebridge server is same network with your air purifier, then run following command to discover the token.
 
-* Display humidity.
+    miio discover --sync
 
-* Display air quality.
+    You may need to wait few minutes until you get the response similar to below:
 
-  ​
+    Device ID: 49466088
+    Model info: Unknown
+    Address: 192.168.1.8
+    Token: 6f7a65786550386c700a6b526666744d via auto-token
+    Support: Unknown
 
-  ​
+    ​
 
+    Record down the Address and Token values as we need it in our configuration file later.
 
+    If you are getting ?????????????? for your token value, please reset your device and connect your Homebridge server directly to the access point advertised by the device.
 
-### Installation
+    Then run the command again.
 
-1. Install required packages.
+    miio discover --sync
 
-   ```
-   npm install -g homebridge-mi-air-purifier miio
-   ```
+    ​
 
-   ​
+    Add following accessory to the config.json.
 
-2. Make sure your Homebridge server is same network with your air purifier, then run following command to discover the token.
+      "accessories": [
+        {
+          "accessory": "MiAirPurifier",
+          "name": "Bed Room Air Purifier",
+          "ip": "ADDRESS_OF_THE_AIR_PURIFIER",
+          "token": "TOKEN_FROM_STEP_3",
+          "showTemperature": true,
+          "showHumidity": true,
+          "showAirQuality": true,
+          "showLED": true,
+          "showBuzzer": true
+        },
+        {
+          "accessory": "MiAirPurifier",
+          "name": "Living Room Air Purifier",
+          "ip": "ADDRESS_OF_THE_AIR_PURIFIER",
+          "token": "TOKEN_FROM_STEP_3",
+          "showTemperature": true,
+          "showHumidity": true,
+          "showAirQuality": true,
+          "showLED": true,
+          "showBuzzer": true
+        }
+      ]
 
-   ```
-   miio --discover --sync
-   ```
+    Notes: Set value for showTemperature, showHumidity, showAirQuality, showLED, showBuzzer to true or false to show or hide these sensors in Home app.
 
+    ​
 
-3. You may need to wait few minutes until you get the response similar to below:
+    Restart Homebridge, and your Mi air purifier will be added to Home app.
 
-   ```
-   Device ID: 49466088
-   Model info: Unknown
-   Address: 192.168.1.8
-   Token: 6f7a65786550386c700a6b526666744d via auto-token
-   Support: Unknown
-   ```
+License
 
-   ​
-
-4. Record down the `Address` and `Token` values as we need it in our configuration file later.
-
-5. If you are getting `??????????????` for your token value, please reset your device and connect your Homebridge server directly to the access point advertised by the device.
-
-6. Then run the command again.
-
-   ```
-   miio --discover --sync
-   ```
-
-   ​
-
-7. Add following accessory to the `config.json`.
-
-   ```
-     "accessories": [
-       {
-         "accessory": "MiAirPurifier",
-         "name": "Air Purifier",
-         "ip": "ADDRESS_OF_THE_AIR_PURIFIER",
-         "token": "TOKEN_FROM_STEP_3",
-         "showTemperature": true,
-         "showHumidity": true,
-         "showAirQuality": true
-       }
-     ]
-   ```
-
-   ​**Notes:** Set value for `showTemperature`, `showHumidity`, `showAirQuality` to **true** or **false** to show or hide these sensors in Home app.
-
-   ​
-
-8. Restart Homebridge, and your Mi air purifier will be added to Home app.
-
-
-
-### License
-
-See the [LICENSE](https://github.com/seikan/homebridge-mi-air-purifier/blob/master/LICENSE.md) file for license rights and limitations (MIT).
-
-
-
+See the LICENSE file for license rights and limitations (MIT).
