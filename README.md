@@ -18,8 +18,6 @@ This is Xiaomi Mi Air Purifier plugin for [Homebridge](https://github.com/nfarin
 
   * Favorite / High: Lift fan speed great than 80%.
 
-* Change fan rotation speed.
-
 * Switch child lock on / off.
 
 * Switch LED light on / off.
