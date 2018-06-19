@@ -29,6 +29,8 @@ function MiAirPurifier(log, config) {
 	if(!this.token)
 		throw new Error('Your must provide token of the Air Purifier.');
 
+	// Modes supported
+        this.modes = [[0, 'idle'], [60, 'auto'], [80, 'silent'], [100, 'favorite']];
 
 	// Register the service
 	this.service = new Service.AirPurifier(this.name);
@@ -210,37 +212,41 @@ MiAirPurifier.prototype = {
 	},
 
 	getCurrentRelativeHumidity: function(callback) {
-		this.device.call('get_prop', ['humidity'])
+https://github.com/Partyboy97/homebridge-mi-air-purifier		this.device.call('get_prop', ['humidity'])
 			.then(result => {
 				callback(null, result[0]);
             }).catch(err => {
 				callback(err);
 			});
 	},
+	
+	getRotationSpeed: async function(callback) {
+        if (!this.device) {
+            callback(new Error('No Air Purifier is discovered.'));
+            return;
+        }
 
-	getRotationSpeed: function(callback) {
-		this.device.call('get_prop', ['favorite_level'])
-			.then(result => {
-				callback(null, Math.ceil( result[0] * 6.25 ));
-			}).catch(err => {
-				callback(err);
-			});
+        await this.device.call('get_prop', ['mode'])
+            .then(result => {
+                for(var item of this.modes){
+                    if(result[0] == item[1]){ callback(null, item[0]); return;}}
+            })
+            .catch(err => {callback(err);});
 	},
+	
+	setRotationSpeed: async function(speed, callback) {
+        if (!this.device) {
+            callback(new Error('No Air Purifier is discovered.'));
+            return;
+        }
 
-	setRotationSpeed: function(speed, callback) {
-		this.device.call('get_prop', ['mode'])
-			.then(result => {
-				if(result[0] != 'favorite'){
-					this.device.call('set_mode', ['favorite'])
-					return;
-				}
-			})
-		this.device.call('set_level_favorite',[Math.ceil( speed / 6.25 )])
-			.then(result => {
-				callback(null, result[0]);
-			}).catch(err => {
-				callback(err);
-			});
+        for(var item of this.modes){
+            if(speed <= item[0]){
+               this.device.call('set_mode', [item[1]])
+                  .then(result => {(result[0] === 'ok') ? callback() : callback(new Error(result[0]));
+            })
+            .catch(err => {callback(err);});
+                break;}}
 	},
 	
         getLED: function(callback) {
